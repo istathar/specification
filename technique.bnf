@@ -53,16 +53,18 @@ procedure_declaration := Identifier parameters? ":" signature? NEWLINE
 Identifier := [a-z][a-z0-9_]*
 
 parameters := "(" variable ("," variable)* ")"
-variable := Identifier
+variable := Identifier | hole
+hole := "?"
 
 signature := Genus "->" Genus
 
-Genus := unit_genus | simple_genus | list_genus | tuple_genus | naked_genus
+Genus := unit_genus | simple_genus | list_genus | tuple_genus | naked_genus | wildcard
 unit_genus := "()"
 simple_genus := Forma
 list_genus := "[" Forma "]"
 tuple_genus := "(" Forma ("," Forma)+ ")"
 naked_genus := Forma ("," Forma)+
+wildcard := "*"
 
 Forma := [A-Z][a-zA-Z0-9_]*
 
