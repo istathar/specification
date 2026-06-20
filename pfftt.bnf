@@ -106,6 +106,7 @@ State :=
     "Resume" |
     "Invoke" SPACE invocable |
     "Execute" SPACE executable |
+    "Input" SPACE supplied |
     "Begin" |
     "Done" SPACE Value |
     "Skip" |
@@ -117,11 +118,35 @@ invocable := procedure | uri
 
 executable :=  Identifier "()"
 
-Value := unit | tablet
+; The values supplied to a procedure as parameters. Each value is shown
+; bound to its parameter name with `~` if one was declared, otherwise is
+; left bare when the parameter is unnamed.
+supplied := "(" ( " " binding ( ", " binding )* " " )? ")"
+binding := Value ( " ~ " Identifier )?
+
+Value := unit | literal | numeric | list | tuple | tablet
 
 unit := "()"
 
-; The Tablet data structure in Technique can nest arbitrarily but this runs
-; to end of line so any content here is acceptable.
+; A string literal — the form a chosen response or any text value records as.
+; Backslash escapes keep a value on a single record line: \" for a quote, \\
+; for a backslash, and \n / \r for the line breaks of a multi-line value.
+literal := "\"" literal_char* "\""
+literal_char := [^"\\] | "\\" ("\"" | "\\" | "n" | "r")
 
-tablet := "[" ANY "]"
+; An integer or a Quantity, written exactly as the Technique language number
+; literal it came from (integral and Quantity are defined in technique.bnf).
+numeric := integral | Quantity
+
+; An inline, comma-separated list of values. The empty list is "[]".
+list := "[]" | "[ " Value ( ", " Value )* " ]"
+
+; An inline, comma-separated tuple of values.
+tuple := "( " Value ( ", " Value )* " )"
+
+; A tablet: a series of "label" = value pairs, matching the Technique language
+; (the label is quoted). The empty tablet is "[=]", which distinguishes it from
+; the empty list. A bracketed value is a tablet when it carries a top-level
+; " = " and a list otherwise. Tablets, lists, and their values nest arbitrarily.
+tablet := "[=]" | "[ " pair ( ", " pair )* " ]"
+pair := "\"" literal_char* "\"" " = " Value
