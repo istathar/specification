@@ -106,6 +106,7 @@ State :=
     "Resume" |
     "Invoke" SPACE invocable |
     "Execute" SPACE executable |
+    "Return" SPACE Value |
     "Input" SPACE supplied |
     "Begin" |
     "Done" SPACE Value |
