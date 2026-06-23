@@ -104,6 +104,7 @@ State :=
     "Start" SPACE uri |
     "Stop" |
     "Resume" |
+    "Finish" |
     "Invoke" SPACE invocable |
     "Execute" SPACE executable |
     "Return" SPACE Value |
