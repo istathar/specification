@@ -19,7 +19,7 @@ NEWLINE := "\n" | "\r\n"
 SPACE := " " | "\t" | "\n"
 
 ; Specially defined as any characters but matching lazily, such that whatever
-; token or pattern that follows is excluded.
+; token or pattern (such as a closing delimiter) that follows is excluded.
 ANY
 
 ; A document or file has an optional metadata header, followed by a technique.
@@ -88,6 +88,7 @@ Expression :=
     variable |
     unit_literal |
     string_literal |
+    response_literal |
     multiline_literal |
     numeric_literal |
     Invocation |
@@ -121,6 +122,8 @@ string_literal := "\"" string_content* "\""
 string_content := plain_text | interpolation
 plain_text := ANY
 interpolation := "{" Expression "}"
+
+response_literal := "'" response_value "'"
 
 ; Multiline strings preserve internal structure and whitespace.
 multiline_literal := "```" language? NEWLINE multiline_content "```"
