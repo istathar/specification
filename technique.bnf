@@ -86,6 +86,7 @@ identifiers := Identifier | "(" Identifier ("," Identifier)* ")"
 
 Expression :=
     variable |
+    unit_literal |
     string_literal |
     multiline_literal |
     numeric_literal |
@@ -95,6 +96,8 @@ Expression :=
     repeat_keyword |
     expression_binding |
     list_structure
+
+unit_literal := "()"
 
 Invocation := "<" invocation_target ">" ("(" arguments? ")")?
 
