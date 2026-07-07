@@ -96,7 +96,8 @@ Expression :=
     foreach_keyword |
     repeat_keyword |
     expression_binding |
-    list_structure
+    list_structure |
+    tuple_literal
 
 unit_literal := "()"
 
@@ -187,6 +188,9 @@ list_separator := ("," | NEWLINE)
 Pair := Label "=" Expression
 
 Label := "\"" ANY "\""
+
+; A tuple combines two or more values of possibly differing types.
+tuple_literal := "(" Expression ("," Expression)+ ")"
 
 ; Last but not least, procedures can be grouped into sections, marked with
 ; capital roman numerals.
