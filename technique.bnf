@@ -95,6 +95,7 @@ Expression :=
     Application |
     foreach_keyword |
     repeat_keyword |
+    within_keyword |
     expression_binding |
     list_structure |
     tuple_literal
@@ -116,6 +117,8 @@ arguments := Expression ("," Expression)*
 foreach_keyword := "foreach" identifiers "in" Expression
 
 repeat_keyword := "repeat" Expression
+
+within_keyword := "within" Expression
 
 expression_binding := Expression "~" identifiers
 
