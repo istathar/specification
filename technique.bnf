@@ -76,7 +76,7 @@ procedure_description := Paragraph+
 
 Paragraph := Descriptive+ NEWLINE
 
-Descriptive := ANY | code_inline | descriptive_binding
+Descriptive := ANY | code_inline | descriptive_binding | cost_literal
 
 code_inline := "{" Expression "}"
 
@@ -95,6 +95,8 @@ Expression :=
     Application |
     foreach_keyword |
     repeat_keyword |
+    within_keyword |
+    cost_literal |
     expression_binding |
     list_structure |
     tuple_literal
@@ -116,6 +118,10 @@ arguments := Expression ("," Expression)*
 foreach_keyword := "foreach" identifiers "in" Expression
 
 repeat_keyword := "repeat" Expression
+
+within_keyword := "within" Expression
+
+cost_literal := "$" "(" Expression ")"
 
 expression_binding := Expression "~" identifiers
 
