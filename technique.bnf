@@ -48,7 +48,7 @@ Procedure :=
     procedure_description?
     Scope*
 
-procedure_declaration := Identifier parameters? ":" signature? NEWLINE
+procedure_declaration := Identifier parameters? " :" signature? NEWLINE
 
 Identifier := [a-z][a-z0-9_]*
 
