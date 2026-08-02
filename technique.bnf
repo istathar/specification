@@ -180,9 +180,8 @@ role_attribute := "@" Identifier | "@*"
 place_attribute := "^" Identifier | "^*"
 
 response_block := Response ("|" Response)*
-Response := "'" response_value "'" response_condition?
+Response := "'" response_value "'"
 response_value := ANY
-response_condition :=  ANY
 
 ; Technique has lists (homogenous lists of values of a single type) and
 ; tablets (a series of key/value pairs of "label" and an expression). Both are
