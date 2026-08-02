@@ -30,7 +30,11 @@ Document := Metadata? Technique?
 ; what domain use case is intended when rendering this technique.
 Metadata := magic_line spdx_line? domain_line?
 
-magic_line := "%" "technique" "v1" NEWLINE
+magic_line := "%" "technique" Version NEWLINE
+Version := "v" major ("." minor ("." patch)?)?
+major := [0-9]+
+minor := [0-9]+
+patch := [0-9]+
 
 spdx_line := "!" license copyright? NEWLINE
 license := [a-zA-Z0-9.,-_ ()[]]+
