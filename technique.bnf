@@ -19,7 +19,7 @@ NEWLINE := "\n" | "\r\n"
 SPACE := " " | "\t" | "\n"
 
 ; Specially defined as any characters but matching lazily, such that whatever
-; token or pattern that follows is excluded.
+; token or pattern (such as a closing delimiter) that follows is excluded.
 ANY
 
 ; A document or file has an optional metadata header, followed by a technique.
@@ -30,7 +30,11 @@ Document := Metadata? Technique?
 ; what domain use case is intended when rendering this technique.
 Metadata := magic_line spdx_line? domain_line?
 
-magic_line := "%" "technique" "v1" NEWLINE
+magic_line := "%" "technique" Version NEWLINE
+Version := "v" major ("." minor ("." patch)?)?
+major := [0-9]+
+minor := [0-9]+
+patch := [0-9]+
 
 spdx_line := "!" license copyright? NEWLINE
 license := [a-zA-Z0-9.,-_ ()[]]+
@@ -48,7 +52,7 @@ Procedure :=
     procedure_description?
     Scope*
 
-procedure_declaration := Identifier parameters? ":" signature? NEWLINE
+procedure_declaration := Identifier parameters? " :" signature? NEWLINE
 
 Identifier := [a-z][a-z0-9_]*
 
@@ -76,7 +80,7 @@ procedure_description := Paragraph+
 
 Paragraph := Descriptive+ NEWLINE
 
-Descriptive := ANY | code_inline | descriptive_binding
+Descriptive := ANY | code_inline | descriptive_binding | cost_literal
 
 code_inline := "{" Expression "}"
 
@@ -86,15 +90,22 @@ identifiers := Identifier | "(" Identifier ("," Identifier)* ")"
 
 Expression :=
     variable |
+    unit_literal |
     string_literal |
+    response_literal |
     multiline_literal |
     numeric_literal |
     Invocation |
     Application |
     foreach_keyword |
     repeat_keyword |
+    within_keyword |
+    cost_literal |
     expression_binding |
-    list_structure
+    list_structure |
+    tuple_literal
+
+unit_literal := "()"
 
 Invocation := "<" invocation_target ">" ("(" arguments? ")")?
 
@@ -112,12 +123,18 @@ foreach_keyword := "foreach" identifiers "in" Expression
 
 repeat_keyword := "repeat" Expression
 
+within_keyword := "within" Expression
+
+cost_literal := "$" "(" Expression ")"
+
 expression_binding := Expression "~" identifiers
 
 string_literal := "\"" string_content* "\""
 string_content := plain_text | interpolation
 plain_text := ANY
 interpolation := "{" Expression "}"
+
+response_literal := "'" response_value "'"
 
 ; Multiline strings preserve internal structure and whitespace.
 multiline_literal := "```" language? NEWLINE multiline_content "```"
@@ -167,20 +184,22 @@ role_attribute := "@" Identifier | "@*"
 place_attribute := "^" Identifier | "^*"
 
 response_block := Response ("|" Response)*
-Response := "'" response_value "'" response_condition?
+Response := "'" response_value "'"
 response_value := ANY
-response_condition :=  ANY
 
 ; Technique has lists (homogenous lists of values of a single type) and
 ; tablets (a series of key/value pairs of "label" and an expression). Both are
 ; delimited by brackets. Elements can be separated by commas or newlines.
-list_structure := "[" (list_element (list_separator list_element)*)? "]"
+list_structure := "[" list_element (list_separator list_element)* "]" | "[=]" | "[]"
 list_element := Pair | Expression
 list_separator := ("," | NEWLINE)
 
 Pair := Label "=" Expression
 
 Label := "\"" ANY "\""
+
+; A tuple combines two or more values of possibly differing types.
+tuple_literal := "(" Expression ("," Expression)+ ")"
 
 ; Last but not least, procedures can be grouped into sections, marked with
 ; capital roman numerals.
