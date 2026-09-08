@@ -109,12 +109,13 @@ State :=
     "Finish" |
     "Invoke" SPACE invocable |
     "Execute" SPACE executable |
-    "Return" SPACE Value |
-    "Input" SPACE supplied |
-    "Begin" |
+    "Return" (SPACE Value)? |
+    "Begin" SPACE supplied |
+    "Bind" SPACE supplied |
     "Done" SPACE Value |
     "Skip" |
-    "Fail" (SPACE Value)?
+    "Fail" (SPACE Value)? |
+    "Revoke"
 
 RunId := [0-9]+
 
