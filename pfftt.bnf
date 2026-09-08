@@ -94,13 +94,17 @@ attribute := role_attribute | place_attribute
 role_attribute := "@" Identifier | "@*"
 place_attribute := "^" Identifier | "^*"
 
-; Activity verbs and payloads, collectively the event being observed. Done is
-; the most important, recording an outcome of a step. Begin marks the start
-; of work on a step (paired with the eventual Done/Skip/Fail); duration is
-; derived from the pair. Invoke marks dispatch from the current procedure
-; into another (the return is implicit — the next event's Path reveals the
-; resumed procedure). Execute records a function call out to the host
-; environment.
+; Activity verbs and payloads, collectively the event being observed. Done
+; is the most important, recording an outcome of a step. Begin marks the
+; start of work on a step (paired with the eventual Done/Skip/Fail);
+; duration is derived from the pair. Invoke marks dispatch from the current
+; procedure into another (the return is implicit — the next event's Path
+; reveals the resumed procedure). Execute records a function call out to the
+; host environment. Return documents the return from a function, and Bind is
+; for values bound to a variable (be that from a function or in prose or
+; elsewhere). Finally Revoke exists to note a record as having been
+; invalidated allowing its value to be edited and requiring any downstream
+; steps to be re-executed.
 
 State :=
     "Start" SPACE uri |
@@ -127,9 +131,9 @@ invocable := procedure | uri
 
 executable :=  Identifier "()"
 
-; The values supplied to a procedure as parameters. Each value is shown
-; bound to its parameter name with `~` if one was declared, otherwise is
-; left bare when the parameter is unnamed.
+; The values supplied to a procedure as parameters or bound to a set of
+; variables. Each value is shown bound to its parameter name with `~` if one
+; was declared, otherwise is left bare when the parameter is unnamed.
 supplied := "(" ( " " binding ( ", " binding )* " " )? ")"
 binding := Value ( " ~ " Identifier )?
 
